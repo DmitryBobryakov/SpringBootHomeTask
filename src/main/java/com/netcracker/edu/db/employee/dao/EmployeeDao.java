@@ -4,9 +4,19 @@ import com.netcracker.edu.db.employee.model.Employee;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
 
-public interface EmployeeDao {
+import org.springframework.data.annotation.Id;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
+public interface EmployeeDao{
+
+	
+	 
+    
+	
+	
     /**
      * Select employee from DB by specified id
      * @param employeeId
@@ -33,6 +43,7 @@ public interface EmployeeDao {
      * @param employee
      * @return true or false depending on operation result
      */
+  
     boolean deleteEmployee(Employee employee);
 
     /**

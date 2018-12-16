@@ -74,6 +74,13 @@ public class EmployeeDaoJpaTest {
 
         Assert.assertNull(actual);
     }
+    
+	@Test
+	public void testAddEmployeeWork() {
+		Assert.assertTrue(
+				employeeDao.addEmployee(new Employee(BigInteger.valueOf(1L),
+						"Dmitry", "Bobryakov", "Dev", 1L, 100L)));
+	}
 
     private String getContentByResourceRelativePath(String path) throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
