@@ -30,7 +30,6 @@ public class EmployeeDaoJpaImpl implements EmployeeDao {
 	}
 
 	@Override
-	
 	public boolean addEmployee(Employee employee) {
 		try {
 			entityManager.persist(employee);
@@ -65,8 +64,7 @@ public class EmployeeDaoJpaImpl implements EmployeeDao {
 
 	@Override
 	public List<Employee> getEmployeesBySurname(String surname) {
-		Query query = entityManager.createQuery(
-				"SELECT * FROM employee e WHERE e.surname = :surname");
+		Query query = entityManager.createQuery(QueryConsts.selectWithSurname);
 		query.setParameter("surname", surname);
 		List<Employee> ret = query.getResultList();
 
@@ -75,9 +73,9 @@ public class EmployeeDaoJpaImpl implements EmployeeDao {
 
 	@Override
 	public List<Employee> getEmployeesByDepartmentId(long departmentId) {
-		Query query = entityManager.createQuery(
-				"SELECT * FROM employee e WHERE e.departmentid = :departmentid");
-		query.setParameter("departmentid", departmentId);
+		Query query = entityManager
+				.createQuery(QueryConsts.selectWithDepartment);
+		query.setParameter("department_id", departmentId);
 		List<Employee> ret = query.getResultList();
 
 		return ret;
@@ -85,8 +83,8 @@ public class EmployeeDaoJpaImpl implements EmployeeDao {
 
 	@Override
 	public List<Employee> getEmployeesWithGreaterSalary(long thresholdSalary) {
-		Query query = entityManager.createQuery(
-				"SELECT * FROM employee e WHERE e.salary > :eSalary");
+		Query query = entityManager
+				.createQuery(QueryConsts.selectWithGreaterSalary);
 		query.setParameter("eSalary", thresholdSalary);
 		List<Employee> ret = query.getResultList();
 
@@ -95,8 +93,7 @@ public class EmployeeDaoJpaImpl implements EmployeeDao {
 
 	@Override
 	public List<Employee> getAllEmployees() {
-		Query query = entityManager.createQuery(
-				"SELECT * FROM employee");
+		Query query = entityManager.createQuery(QueryConsts.selectAll);
 		List<Employee> ret = query.getResultList();
 		return ret;
 	}
