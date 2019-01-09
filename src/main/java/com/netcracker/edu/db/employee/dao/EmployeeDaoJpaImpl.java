@@ -5,11 +5,8 @@ import com.netcracker.edu.db.employee.model.Employee;
 
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.Query;
+import javax.persistence.*;
 import javax.transaction.Transactional;
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 
 import java.math.BigInteger;
@@ -54,7 +51,11 @@ public class EmployeeDaoJpaImpl implements EmployeeDao {
 	@Override
 	public boolean deleteEmployee(Employee employee) {
 		try {
-			entityManager.remove(employee);
+            Object identifier =
+                    entityManager.getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(employee);
+
+			Employee same=entityManager.find(Employee.class,identifier);
+			entityManager.remove(same);
 			return true;
 		} catch (Exception e) {
 			return false;

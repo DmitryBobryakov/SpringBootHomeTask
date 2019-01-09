@@ -27,9 +27,11 @@ import javax.transaction.Transactional;
 
 /**
  * id name surname position departmentId salary
- * ----------------------------------------------------------- 1 name1 surname1
- * boss 1 100 2 name2 surname2 big boss 1 200 3 name3 surname2 big boss 1 300 4
- * name4 surname3 boss 2 100 5 name5 surname4 boss 2 100
+ * 1 name1 surname1 boss 1 100
+ * 2 name2 surname2 big boss 1 200
+ * 3 name3 surname2 big boss 1 300
+ * 4 name4 surname3 boss 2 100
+ * 5 name5 surname4 boss 2 100
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -62,7 +64,8 @@ public class EmployeeDaoJpaTest {
 
 	@Test
 	public void testGetEmployeeByIdExist() {
-		Employee actual = employeeDao.getEmployeeById(BigInteger.valueOf(1L));
+		Employee actual;
+		actual = employeeDao.getEmployeeById(BigInteger.valueOf(1L));
 		Employee expected = new Employee(BigInteger.valueOf(1L), "name1",
 				"surname1", "boss", 1L, 100);
 

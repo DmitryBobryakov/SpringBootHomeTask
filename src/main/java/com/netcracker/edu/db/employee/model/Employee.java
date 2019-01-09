@@ -22,6 +22,7 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
+
     private BigInteger id;
 
     @Column(name = "name")
@@ -38,4 +39,6 @@ public class Employee {
 
     @Column(name = "salary")
     private long salary;
+
+
 }
