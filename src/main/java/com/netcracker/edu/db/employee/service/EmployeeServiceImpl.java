@@ -4,6 +4,7 @@ import com.netcracker.edu.db.employee.dao.EmployeeDao;
 import com.netcracker.edu.db.employee.model.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -21,26 +22,51 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public boolean addEmployee(Employee employee) {
-        return false;
+        return employeeDao.addEmployee(employee);
     }
 
     @Override
     public boolean updateEmployee(Employee employee) {
-        return false;
+        return employeeDao.updateEmployee(employee);
     }
 
     @Override
     public boolean deleteEmployee(Employee employee) {
-        return false;
+        return employeeDao.deleteEmployee(employee);
     }
 
     @Override
+    @Transactional
     public boolean swapEmployeesPositionsAndSalaries(BigInteger promotedId, BigInteger demotedId) {
-        return false;
+        try{
+            Employee promotedEmpl=employeeDao.getEmployeeById(promotedId);
+            Employee demotedEmpl=employeeDao.getEmployeeById(demotedId);
+
+            long buffSalary=promotedEmpl.getSalary();
+            String buffPosition=promotedEmpl.getPosition();
+
+            promotedEmpl.setSalary(demotedEmpl.getSalary());
+            promotedEmpl.setPosition(demotedEmpl.getPosition());
+
+            demotedEmpl.setSalary(buffSalary);
+            demotedEmpl.setPosition(buffPosition);
+
+           employeeDao.updateEmployee(promotedEmpl);
+           employeeDao.updateEmployee(demotedEmpl);
+
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+
+
     }
 
     @Override
     public List<Employee> getAllEmployees() {
-        return null;
+        return employeeDao.getAllEmployees();
     }
+
+
+
 }

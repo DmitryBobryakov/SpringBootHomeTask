@@ -12,9 +12,7 @@ import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.util.List;
 
-/**
- * TODO: Implement me
- */
+
 @Repository
 public class EmployeeDaoJpaImpl implements EmployeeDao {
 
@@ -69,6 +67,8 @@ public class EmployeeDaoJpaImpl implements EmployeeDao {
 		query.setParameter("surname", surname);
 		List<Employee> ret = query.getResultList();
 
+
+
 		return ret;
 	}
 
@@ -98,4 +98,6 @@ public class EmployeeDaoJpaImpl implements EmployeeDao {
 		List<Employee> ret = query.getResultList();
 		return ret;
 	}
+
+
 }
