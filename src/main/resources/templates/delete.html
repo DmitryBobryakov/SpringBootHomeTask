@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h2>Delete Employee by ID</h2>
+<h3>Search for employee to delete</h3>
+
+<form action="#" th:action="@{/delete}" method="get">
+    <p>Employee ID <input type="text" th:name="id" /></p>
+    <p><input type="submit" value="Submit" /></p>
+</form>
+
+
+<div th:if="${emplToDelete}">
+    <br>
+    <div th:if="${emplToDelete.id}">
+        <div th:if="${emplToDelete.id} > 0">
+            <h3>Deleted Employee</h3>
+            <table border="1">
+                <tr>
+                    <td>ID</td>
+                    <td th:text="${emplToDelete.id}"/>
+                </tr>
+                <tr>
+                    <td>Name</td>
+                    <td th:text="${emplToDelete.name}"/>
+                </tr>
+                <tr>
+                    <td>Surname</td>
+                    <td th:text="${emplToDelete.surname}"/>
+                </tr>
+                <tr>
+                    <td>Department ID</td>
+                    <td th:text="${emplToDelete.departmentId}"/>
+                </tr>
+                <tr>
+                    <td>Position</td>
+                    <td th:text="${emplToDelete.position}"/>
+                </tr>
+                <tr>
+                    <td>Salary</td>
+                    <td th:text="${emplToDelete.salary}"/>
+                </tr>
+            </table>
+        </div>
+        <div th:if="${emplToDelete.id}==-1">
+            <p>Employee not found</p>
+        </div>
+    </div>
+</div>
+
+<br>
+<p>Back to <a href="/">home</a></p>
+
+
+
+<h2>Updated table employees </h2>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Department ID</th>
+        <th>Position</th>
+        <th>Salary</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="oneEmployee : ${allEmployees}">
+        <td th:text="${oneEmployee.id}"></td>
+        <td th:text="${oneEmployee.name}"></td>
+        <td th:text="${oneEmployee.surname}"></td>
+        <td th:text="${oneEmployee.departmentId}"></td>
+        <td th:text="${oneEmployee.position}"></td>
+        <td th:text="${oneEmployee.salary}"></td>
+    </tr>
+    </tbody>
+</table>
+
+
+</body>
+</html>
+

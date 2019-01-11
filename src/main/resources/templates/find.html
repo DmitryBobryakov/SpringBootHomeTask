@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h2>Find Employee by ID</h2>
+
+<h3>Search</h3>
+<form action="#" th:action="@{/find}" method="get">
+    <p>Employee ID <input type="text" th:name="id" /></p>
+    <p><input type="submit" value="Submit" /></p>
+</form>
+
+<div th:if="${employee}">
+    <br>
+    <div th:if="${employee.id}">
+        <div th:if="${employee.id} > 0">
+            <h3>Result</h3>
+            <table border="1">
+                <tr>
+                    <td>ID</td>
+                    <td th:text="${employee.id}"/>
+                </tr>
+                <tr>
+                    <td>Name</td>
+                    <td th:text="${employee.name}"/>
+                </tr>
+                <tr>
+                    <td>Surname</td>
+                    <td th:text="${employee.surname}"/>
+                </tr>
+                <tr>
+                    <td>Department ID</td>
+                    <td th:text="${employee.departmentId}"/>
+                </tr>
+                <tr>
+                    <td>Position</td>
+                    <td th:text="${employee.position}"/>
+                </tr>
+                <tr>
+                    <td>Salary</td>
+                    <td th:text="${employee.salary}"/>
+                </tr>
+            </table>
+        </div>
+        <div th:if="${employee.id}==-1">
+            <p>Employee not found</p>
+        </div>
+    </div>
+</div>
+
+<br>
+<p>Back to <a href="/">home</a></p>
+</body>
+</html>
