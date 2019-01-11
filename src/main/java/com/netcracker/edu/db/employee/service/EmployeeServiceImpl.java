@@ -16,21 +16,25 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeDao employeeDao;
 
     @Override
+
     public Employee getEmployeeById(BigInteger employeeId) {
         return employeeDao.getEmployeeById(employeeId);
     }
 
     @Override
+    @Transactional
     public boolean addEmployee(Employee employee) {
         return employeeDao.addEmployee(employee);
     }
 
     @Override
+    @Transactional
     public boolean updateEmployee(Employee employee) {
         return employeeDao.updateEmployee(employee);
     }
 
     @Override
+    @Transactional
     public boolean deleteEmployee(Employee employee) {
         return employeeDao.deleteEmployee(employee);
     }
