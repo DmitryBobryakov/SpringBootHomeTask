@@ -18,25 +18,50 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
 
     public Employee getEmployeeById(BigInteger employeeId) {
-        return employeeDao.getEmployeeById(employeeId);
+        try{
+            return employeeDao.getEmployeeById(employeeId);
+        }catch (IllegalArgumentException e){
+            Employee empl=new Employee(BigInteger.valueOf(-1),"","","",1,1);
+            return empl;
+        }
+
     }
 
     @Override
     @Transactional
     public boolean addEmployee(Employee employee) {
-        return employeeDao.addEmployee(employee);
+        try{
+            return employeeDao.addEmployee(employee);
+        }catch (Exception e){
+            return false;
+        }
+
     }
 
     @Override
     @Transactional
     public boolean updateEmployee(Employee employee) {
-        return employeeDao.updateEmployee(employee);
+        try{
+            return employeeDao.updateEmployee(employee);
+        }catch (IllegalArgumentException e){
+            throw e;
+        }catch (IllegalStateException e){
+            throw e;
+        }
+
     }
 
     @Override
     @Transactional
     public boolean deleteEmployee(Employee employee) {
-        return employeeDao.deleteEmployee(employee);
+        try{
+            return employeeDao.deleteEmployee(employee);
+        }catch (IllegalArgumentException e){
+        throw e;
+        }catch (IllegalStateException e){
+        throw e;
+        }
+
     }
 
     @Override

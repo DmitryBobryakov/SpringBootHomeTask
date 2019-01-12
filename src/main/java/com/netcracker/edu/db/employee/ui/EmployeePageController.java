@@ -42,6 +42,8 @@ public class EmployeePageController {
         }
 
         BigInteger employeeId = ControllerUtils.toBigInteger(id);
+
+
         Employee employee = employeeId != null ? employeeService.getEmployeeById(employeeId) : null;
         employee = employee != null ? employee : ControllerUtils.getNonexistentEmployee();
 
@@ -50,17 +52,17 @@ public class EmployeePageController {
         return "find";
     }
 
-    @GetMapping("/delete")
-    public String deleteEmpl(Model model,  @RequestParam(value = "id", required = false) String id){
+    @DeleteMapping("/delete")
+    public String deleteEmpl(Model model, @RequestParam(value = "id", required = false) String id) {
         if (!ControllerUtils.isFilled(id)) {
             LOGGER.warn("Employee ID was not specified: {}", id);
             model.addAttribute(EMPLOYEE_ATTR, null);
             return "delete";
         }
 
-        Employee emplToDelete=employeeService.getEmployeeById(ControllerUtils.toBigInteger(id));
+        Employee emplToDelete = employeeService.getEmployeeById(ControllerUtils.toBigInteger(id));
         employeeService.deleteEmployee(emplToDelete);
-        model.addAttribute("emplToDelete",emplToDelete);
+        model.addAttribute("emplToDelete", emplToDelete);
 
         List<Employee> employeeList = employeeService.getAllEmployees();
         model.addAttribute("allEmployees", employeeList);
@@ -69,16 +71,16 @@ public class EmployeePageController {
     }
 
     @GetMapping("/update")
-    public String updateEmpl(@RequestBody Employee newEmpl, Model model){
-        if (newEmpl==null) {
+    public String updateEmpl(@RequestBody Employee newEmpl, Model model) {
+        if (newEmpl == null) {
             LOGGER.warn("Employee was not specified: {}");
             model.addAttribute(EMPLOYEE_ATTR, null);
             return "update";
         }
         employeeService.updateEmployee(newEmpl);
 
-        Employee oldEmpl=employeeService.getEmployeeById(newEmpl.getId());
-        model.addAttribute("oldEmployee",oldEmpl);
+        Employee oldEmpl = employeeService.getEmployeeById(newEmpl.getId());
+        model.addAttribute("oldEmployee", oldEmpl);
 
         model.addAttribute("newEmployee", newEmpl);
         List<Employee> employeeList = employeeService.getAllEmployees();
@@ -88,15 +90,15 @@ public class EmployeePageController {
     }
 
     @GetMapping("/create")
-    public String createEmpl(@RequestBody Employee newEmpl, Model model){
-        if(newEmpl==null){
+    public String createEmpl(@RequestBody Employee newEmpl, Model model) {
+        if (newEmpl == null) {
             LOGGER.warn("Wrong new Employee");
-            model.addAttribute(EMPLOYEE_ATTR,null);
+            model.addAttribute(EMPLOYEE_ATTR, null);
             return "create";
         }
 
         employeeService.addEmployee(newEmpl);
-        model.addAttribute("addedEmpl",newEmpl);
+        model.addAttribute("addedEmpl", newEmpl);
 
         List<Employee> employeeList = employeeService.getAllEmployees();
         model.addAttribute("allEmployees", employeeList);

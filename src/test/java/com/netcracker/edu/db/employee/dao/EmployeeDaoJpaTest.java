@@ -89,9 +89,12 @@ public class EmployeeDaoJpaTest {
 	@Test
 	@Transactional
 	public void testUpdateEmployeeWork() {
+		Employee empl=employeeDao.getEmployeeById(BigInteger.valueOf(1));
+		empl.setName("Dmitry");
+		empl.setSurname("Bobryakov");
+
 		Assert.assertTrue(
-				employeeDao.updateEmployee(new Employee(BigInteger.valueOf(1L),
-						"Dmitry", "Bobryakov", "Dev", 1L, 100L)));
+				employeeDao.updateEmployee(empl));
 	}
 
 	@Test
@@ -122,18 +125,17 @@ public class EmployeeDaoJpaTest {
 	}
 
 	@Test
-	public void testGetBySurnameFalse() {
+	public void testGetBySurnameOfNonexistentEmployee() {
 		List<Employee> expected = new LinkedList<>();
-		expected.add(new Employee(BigInteger.valueOf(1L), "name", "surname1",
-				"boss", 1L, 100));
 
-		List<Employee> actual = employeeDao.getEmployeesBySurname("surname1");
-		Assert.assertNotEquals(expected, actual);
+
+		List<Employee> actual = employeeDao.getEmployeesBySurname("surname10");
+		Assert.assertEquals(expected, actual);
 
 	}
 
 	@Test
-	public void testGetByDepartmentIDTrue() {
+	public void testGetByDepartmentIdTrue() {
 		List<Employee> expected = new LinkedList<>();
 		expected.add(new Employee(BigInteger.valueOf(1L), "name1", "surname1",
 				"boss", 1L, 100));
@@ -148,17 +150,12 @@ public class EmployeeDaoJpaTest {
 	}
 
 	@Test
-	public void testGetByDepartmentIDFalse() {
+	public void testGetByDepartmentIdOfNonexistentDepartmentId() {
 		List<Employee> expected = new LinkedList<>();
-		expected.add(new Employee(BigInteger.valueOf(1L), "name", "surname1",
-				"boss", 1L, 100));
-		expected.add(new Employee(BigInteger.valueOf(2L), "name2", "surname2",
-				"big boss", 1L, 200));
-		expected.add(new Employee(BigInteger.valueOf(3L), "name3", "surname2",
-				"big boss", 1L, 300));
 
-		List<Employee> actual = employeeDao.getEmployeesByDepartmentId(1);
-		Assert.assertNotEquals(expected, actual);
+
+		List<Employee> actual = employeeDao.getEmployeesByDepartmentId(100);
+		Assert.assertEquals(expected, actual);
 
 	}
 
@@ -175,13 +172,13 @@ public class EmployeeDaoJpaTest {
 	}
 
 	@Test
-	public void testGetWithGreaterSalaryFalse() {
+	public void testGetWithGreaterSalaryWithSoMuchSalary() {
 		List<Employee> expected = new LinkedList<>();
 
 		expected.add(new Employee(BigInteger.valueOf(3L), "name3", "surname2",
 				"big boss", 1L, 300));
 
-		List<Employee> actual = employeeDao.getEmployeesWithGreaterSalary(400);
+		List<Employee> actual = employeeDao.getEmployeesWithGreaterSalary(4000);
 		Assert.assertNotEquals(expected, actual);
 
 	}

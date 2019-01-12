@@ -10,15 +10,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 
-public interface EmployeeDao{
+public interface EmployeeDao {
 
-	
-	 
-    
-	
-	
+
     /**
      * Select employee from DB by specified id
+     *
      * @param employeeId
      * @return {@link Employee} or null
      */
@@ -26,6 +23,7 @@ public interface EmployeeDao{
 
     /**
      * Add new employee to database
+     *
      * @param employee
      * @return true or false depending on operation result
      */
@@ -33,6 +31,7 @@ public interface EmployeeDao{
 
     /**
      * update existent employee in database
+     *
      * @param employee
      * @return true or false depending on operation result
      */
@@ -40,14 +39,16 @@ public interface EmployeeDao{
 
     /**
      * delete employee from database
+     *
      * @param employee
      * @return true or false depending on operation result
      */
-  
+
     boolean deleteEmployee(Employee employee);
 
     /**
      * Select list of employees from DB by specified secondNames
+     *
      * @param surname
      * @return list of {@link Employee} or empty list
      */
@@ -55,6 +56,7 @@ public interface EmployeeDao{
 
     /**
      * Select employees from DB by specified department Id
+     *
      * @param departmentId
      * @return list of {@link Employee} or empty list
      */
@@ -62,6 +64,7 @@ public interface EmployeeDao{
 
     /**
      * Select employees from DB which salary is higher or equal to specified
+     *
      * @param thresholdSalary
      * @return list of {@link Employee} or empty list
      */
@@ -69,10 +72,10 @@ public interface EmployeeDao{
 
     /**
      * Select all employees from DB
+     *
      * @return list of {@link Employee} or empty list
      */
     List<Employee> getAllEmployees();
-
 
 
 }

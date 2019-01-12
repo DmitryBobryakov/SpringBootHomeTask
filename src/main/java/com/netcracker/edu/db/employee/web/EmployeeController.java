@@ -27,36 +27,50 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeService.getAllEmployees(), HttpStatus.OK);
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") BigInteger employeeId) {
-        return ResponseEntity.ok(employeeService.getEmployeeById(employeeId));
-    }
-
-    @DeleteMapping("/delete/{emplToDelete}")
-    public ResponseEntity<Employee> deleteEmployee(@PathVariable("emplToDelete") BigInteger emplToDelete){
-
-        Employee emp=employeeService.getEmployeeById(emplToDelete);
-
-
-        if (emp == null) {
-            System.out.println("Unable to delete. User with id " + emplToDelete + " not found");
+        Employee retEmpl=employeeService.getEmployeeById(employeeId);
+        if(retEmpl.getId()==BigInteger.valueOf(-1)){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        return ResponseEntity.ok(retEmpl);
+    }
 
-        employeeService.deleteEmployee(emp);
-        return new ResponseEntity<>(emp,HttpStatus.NO_CONTENT);
+    @DeleteMapping("/{emplToDelete}")
+    public ResponseEntity<Employee> deleteEmployee(@PathVariable("emplToDelete") BigInteger emplToDelete){
+        try{
+            Employee emp=employeeService.getEmployeeById(emplToDelete);
+
+
+            if (emp == null) {
+                System.out.println("Unable to delete. User with id " + emplToDelete + " not found");
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            employeeService.deleteEmployee(emp);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }catch (IllegalStateException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);//Not found entity to update
+        }
+
 
     }
 
-    @PutMapping("/swap/{promotedId}/{devotedId}")
+    @PutMapping("/{promotedId}/{devotedId}")
     public ResponseEntity<Employee> swapEmplSalaryAndPosition(@PathVariable("promotedId") BigInteger promotedId,
                                                               @PathVariable("devotedId")BigInteger devotedId){
+        if(promotedId==null||devotedId==null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         employeeService.swapEmployeesPositionsAndSalaries(promotedId,devotedId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Employee> updateByEmpl(@PathVariable BigInteger id,@RequestBody Employee newEmpl){
+        try{
             Employee oldEmpl=employeeService.getEmployeeById(id);
             oldEmpl.setName(newEmpl.getName());
             oldEmpl.setSurname(newEmpl.getSurname());
@@ -66,11 +80,20 @@ public class EmployeeController {
 
             employeeService.updateEmployee(oldEmpl);
             return new ResponseEntity<>(oldEmpl,HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }catch (IllegalStateException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);//Not found entity to update
+        }
+
      }
 
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseEntity<Employee> addNewEmpl(@RequestBody Employee newEmpl){
-        employeeService.addEmployee(newEmpl);
+        boolean ret=employeeService.addEmployee(newEmpl);
+        if(ret==false){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(newEmpl,HttpStatus.OK);
     }
 
