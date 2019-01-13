@@ -78,12 +78,12 @@ public class EmployeePageController {
     }
 
     @GetMapping("/update")
-    public String updateEmpl(@RequestParam(value = "id", required = false) String id,
-                             @RequestParam(value = "name", required = false) String name,
-                             @RequestParam(value = "surname", required = false) String surname,
-                             @RequestParam(value = "position", required = false) String position,
-                             @RequestParam(value = "departmentid", required = false) Long departentid,
-                             @RequestParam(value = "salary", required = false) Long salary,
+    public String updateEmpl(@RequestParam(value = "id", required = false,defaultValue = "-1") String id,
+                             @RequestParam(value = "name", required = false,defaultValue = "-1") String name,
+                             @RequestParam(value = "surname", required = false,defaultValue = "-1") String surname,
+                             @RequestParam(value = "position", required = false,defaultValue = "-1") String position,
+                             @RequestParam(value = "departmentid", required = false,defaultValue = "-1") Long departentid,
+                             @RequestParam(value = "salary", required = false,defaultValue = "-1") Long salary,
                              Model model) {
         BigInteger oldEmplId = ControllerUtils.toBigInteger(id);
         if(oldEmplId==null){
@@ -96,15 +96,17 @@ public class EmployeePageController {
 
         if (id==null||surname==null||name==null||position==null||departentid<1||salary<1) {
             LOGGER.warn("Wrong new Employee");
-            model.addAttribute(EMPLOYEE_ATTR, null);
+            model.addAttribute(EMPLOYEE_ATTR, ControllerUtils.getNonexistentEmployee());
             return "update";
         } else {
-            Employee newEmpl = new Employee(new BigInteger(id), name, surname, position, departentid, salary);
-            Employee oldEmpl = employeeService.getEmployeeById(newEmpl.getId());
-            employeeService.updateEmployee(newEmpl, oldEmpl);
-
-
-            model.addAttribute("newEmployee", newEmpl);
+             Employee newEmpl = new Employee(new BigInteger(id), name, surname, position, departentid, salary);
+             if(newEmpl.getId()==null){
+                 model.addAttribute(EMPLOYEE_ATTR, ControllerUtils.getNonexistentEmployee());
+                 return "update";
+             }
+             Employee oldEmpl=employeeService.getEmployeeById(newEmpl.getId());
+             employeeService.updateEmployee(newEmpl,oldEmpl);
+             model.addAttribute("newEmployee", newEmpl);
 
 
             List<Employee> employeeList = employeeService.getAllEmployees();
