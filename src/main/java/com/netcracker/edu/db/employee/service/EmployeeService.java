@@ -26,7 +26,7 @@ public interface EmployeeService {
      * @param employee
      * @return true or false depending on operation result
      */
-    boolean updateEmployee(Employee employee);
+    boolean updateEmployee(Employee employee,Employee oldEmployee);
 
     /**
      * Delete employee

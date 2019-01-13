@@ -30,7 +30,7 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") BigInteger employeeId) {
         Employee retEmpl=employeeService.getEmployeeById(employeeId);
-        if(retEmpl.getId()==BigInteger.valueOf(-1)){
+        if(retEmpl.getId().equals(BigInteger.valueOf(-1))){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(retEmpl);
@@ -38,7 +38,7 @@ public class EmployeeController {
 
     @DeleteMapping("/{emplToDelete}")
     public ResponseEntity<Employee> deleteEmployee(@PathVariable("emplToDelete") BigInteger emplToDelete){
-        try{
+
             Employee emp=employeeService.getEmployeeById(emplToDelete);
 
 
@@ -47,13 +47,11 @@ public class EmployeeController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            employeeService.deleteEmployee(emp);
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
-        }catch (IllegalArgumentException e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }catch (IllegalStateException e){
+        if (!employeeService.deleteEmployee(emp)) {
+
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);//Not found entity to update
         }
+        return new ResponseEntity<>(HttpStatus.OK);
 
 
     }
@@ -70,7 +68,7 @@ public class EmployeeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Employee> updateByEmpl(@PathVariable BigInteger id,@RequestBody Employee newEmpl){
-        try{
+
             Employee oldEmpl=employeeService.getEmployeeById(id);
             oldEmpl.setName(newEmpl.getName());
             oldEmpl.setSurname(newEmpl.getSurname());
@@ -78,13 +76,12 @@ public class EmployeeController {
             oldEmpl.setSalary(newEmpl.getSalary());
             oldEmpl.setDepartmentId(newEmpl.getDepartmentId());
 
-            employeeService.updateEmployee(oldEmpl);
+            if(!employeeService.updateEmployee(oldEmpl,oldEmpl)){
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
             return new ResponseEntity<>(oldEmpl,HttpStatus.OK);
-        }catch (IllegalArgumentException e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }catch (IllegalStateException e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);//Not found entity to update
-        }
+
+
 
      }
 

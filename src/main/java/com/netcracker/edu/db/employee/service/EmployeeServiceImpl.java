@@ -38,16 +38,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     }
 
-    @Override
+ //   @Override
     @Transactional
-    public boolean updateEmployee(Employee employee) {
+    public boolean updateEmployee(Employee employee,Employee oldEmployee) {
         try{
-            return employeeDao.updateEmployee(employee);
-        }catch (IllegalArgumentException e){
-            throw e;
-        }catch (IllegalStateException e){
-            throw e;
+            return employeeDao.updateEmployee(employee,oldEmployee);
+        }catch (IllegalArgumentException e) {
+            return false;
         }
+
 
     }
 
@@ -57,9 +56,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         try{
             return employeeDao.deleteEmployee(employee);
         }catch (IllegalArgumentException e){
-        throw e;
-        }catch (IllegalStateException e){
-        throw e;
+            return false;
         }
 
     }
@@ -80,8 +77,8 @@ public class EmployeeServiceImpl implements EmployeeService {
             demotedEmpl.setSalary(buffSalary);
             demotedEmpl.setPosition(buffPosition);
 
-           employeeDao.updateEmployee(promotedEmpl);
-           employeeDao.updateEmployee(demotedEmpl);
+           employeeDao.updateEmployee(promotedEmpl,promotedEmpl);
+           employeeDao.updateEmployee(demotedEmpl,promotedEmpl);
 
             return true;
         } catch (Exception e){

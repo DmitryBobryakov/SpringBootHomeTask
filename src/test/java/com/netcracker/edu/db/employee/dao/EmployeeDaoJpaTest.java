@@ -94,7 +94,7 @@ public class EmployeeDaoJpaTest {
 		empl.setSurname("Bobryakov");
 
 		Assert.assertTrue(
-				employeeDao.updateEmployee(empl));
+				employeeDao.updateEmployee(empl,empl));
 	}
 
 	@Test

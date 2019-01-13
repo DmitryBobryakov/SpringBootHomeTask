@@ -3,6 +3,7 @@ package com.netcracker.edu.db.employee.dao;
 import com.netcracker.edu.db.employee.model.Employee;
 
 
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 
 
 import java.math.BigInteger;
-import java.util.IllegalFormatException;
+
 import java.util.List;
 
 
@@ -48,9 +49,9 @@ public class EmployeeDaoJpaImpl implements EmployeeDao {
 	}
 
 	@Override
-	public boolean updateEmployee(Employee employee) {
+	public boolean updateEmployee(Employee employee ,Employee oldEmployee) {
 		try {
-		    if(entityManager.contains(employee)){
+			 if(entityManager.contains(oldEmployee)){
                 entityManager.merge(employee);
                 LOGGER.info("updateEmployee called with \""+employee+"\"");
                 return true;
@@ -78,7 +79,7 @@ public class EmployeeDaoJpaImpl implements EmployeeDao {
                 return true;
             }else{
                 LOGGER.warn("No such Employee in deleteEmpoyee appeared");
-			    throw new IllegalStateException("No such Employee");//Not found entity to update
+			   return false;
             }
 		} catch (IllegalArgumentException e) {
             LOGGER.warn("IllegalArgumentException in deleteEmployee appeared",e);

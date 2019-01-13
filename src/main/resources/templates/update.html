@@ -5,6 +5,18 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
+
+
+<form action="#" th:action="@{/update}" method="get">
+    <p>Employee ID <input type="text" th:name="id" /></p>
+    <p>Employee name <input type="text" th:name="name" /></p>
+    <p>Employee surname <input type="text" th:name="surname" /></p>
+    <p>Employee position <input type="text" th:name="position" /></p>
+    <p>Employee department Id <input type="text" th:name="departmentid" /></p>
+    <p>Employee salary <input type="text" th:name="salary" /></p>
+    <p><input type="submit" value="Submit" /></p>
+</form>
+
 <div th:if="${newEmployee}">
     <br>
     <div th:if="${newEmployee.id}">

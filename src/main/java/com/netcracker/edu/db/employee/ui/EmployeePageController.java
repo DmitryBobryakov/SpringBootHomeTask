@@ -7,9 +7,9 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
+
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigInteger;
@@ -52,17 +52,24 @@ public class EmployeePageController {
         return "find";
     }
 
-    @DeleteMapping("/delete")
+    @GetMapping("/delete")
     public String deleteEmpl(Model model, @RequestParam(value = "id", required = false) String id) {
         if (!ControllerUtils.isFilled(id)) {
             LOGGER.warn("Employee ID was not specified: {}", id);
             model.addAttribute(EMPLOYEE_ATTR, null);
             return "delete";
         }
+        BigInteger employeeId = ControllerUtils.toBigInteger(id);
 
-        Employee emplToDelete = employeeService.getEmployeeById(ControllerUtils.toBigInteger(id));
-        employeeService.deleteEmployee(emplToDelete);
-        model.addAttribute("emplToDelete", emplToDelete);
+        if (employeeId != null) {
+            Employee emplToDelete=employeeService.getEmployeeById(employeeId);
+            emplToDelete = emplToDelete != null ? emplToDelete : ControllerUtils.getNonexistentEmployee();
+            employeeService.deleteEmployee(emplToDelete);
+            model.addAttribute("emplToDelete", emplToDelete);
+        }else{
+            Employee emplToDelete=ControllerUtils.getNonexistentEmployee();
+            model.addAttribute("emplToDelete", emplToDelete);
+        }
 
         List<Employee> employeeList = employeeService.getAllEmployees();
         model.addAttribute("allEmployees", employeeList);
@@ -71,37 +78,63 @@ public class EmployeePageController {
     }
 
     @GetMapping("/update")
-    public String updateEmpl(@RequestBody Employee newEmpl, Model model) {
-        if (newEmpl == null) {
-            LOGGER.warn("Employee was not specified: {}");
-            model.addAttribute(EMPLOYEE_ATTR, null);
+    public String updateEmpl(@RequestParam(value = "id", required = false) String id,
+                             @RequestParam(value = "name", required = false) String name,
+                             @RequestParam(value = "surname", required = false) String surname,
+                             @RequestParam(value = "position", required = false) String position,
+                             @RequestParam(value = "departmentid", required = false) Long departentid,
+                             @RequestParam(value = "salary", required = false) Long salary,
+                             Model model) {
+        BigInteger oldEmplId = ControllerUtils.toBigInteger(id);
+        if(oldEmplId==null){
+            Employee oldEmpl = ControllerUtils.getNonexistentEmployee();
+            model.addAttribute("newEmployee", oldEmpl);
             return "update";
         }
-        employeeService.updateEmployee(newEmpl);
 
-        Employee oldEmpl = employeeService.getEmployeeById(newEmpl.getId());
-        model.addAttribute("oldEmployee", oldEmpl);
 
-        model.addAttribute("newEmployee", newEmpl);
-        List<Employee> employeeList = employeeService.getAllEmployees();
-        model.addAttribute("allEmployees", employeeList);
 
-        return "update";
+        if (id==null||surname==null||name==null||position==null||departentid<1||salary<1) {
+            LOGGER.warn("Wrong new Employee");
+            model.addAttribute(EMPLOYEE_ATTR, null);
+            return "update";
+        } else {
+            Employee newEmpl = new Employee(new BigInteger(id), name, surname, position, departentid, salary);
+            Employee oldEmpl = employeeService.getEmployeeById(newEmpl.getId());
+            employeeService.updateEmployee(newEmpl, oldEmpl);
+
+
+            model.addAttribute("newEmployee", newEmpl);
+
+
+            List<Employee> employeeList = employeeService.getAllEmployees();
+            model.addAttribute("allEmployees", employeeList);
+            return "update";
+        }
+
     }
 
     @GetMapping("/create")
-    public String createEmpl(@RequestBody Employee newEmpl, Model model) {
-        if (newEmpl == null) {
+    public String createEmpl(@RequestParam(value = "name", required = false) String name,
+                             @RequestParam(value = "surname", required = false) String surname,
+                             @RequestParam(value = "position", required = false) String position,
+                             @RequestParam(value = "departmentid", required = false) Long departentid,
+                             @RequestParam(value = "salary", required = false) Long salary,
+                             Model model) {
+        if (surname==null||name==null||position==null||departentid<1||salary<1) {
             LOGGER.warn("Wrong new Employee");
             model.addAttribute(EMPLOYEE_ATTR, null);
             return "create";
+        }else{
+            Employee newEmpl=new Employee(null,name,surname,position,departentid,salary);
+
+            employeeService.addEmployee(newEmpl);
+            model.addAttribute("addedEmpl", newEmpl);
+
+            List<Employee> employeeList = employeeService.getAllEmployees();
+            model.addAttribute("allEmployees", employeeList);
         }
 
-        employeeService.addEmployee(newEmpl);
-        model.addAttribute("addedEmpl", newEmpl);
-
-        List<Employee> employeeList = employeeService.getAllEmployees();
-        model.addAttribute("allEmployees", employeeList);
 
         return "create";
     }
